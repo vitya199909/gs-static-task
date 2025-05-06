@@ -1,0 +1,27 @@
+trigger:
+  paths:
+    include:
+      - index.html
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo "📄 Changed index.html"
+      ls -l index.html
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)'
+    Contents: 'index.html'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'static-site'
+    publishLocation: 'Container'
